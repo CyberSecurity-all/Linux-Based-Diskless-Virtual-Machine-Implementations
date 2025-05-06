@@ -39,23 +39,23 @@
 ```
 mkinitramfs -o /boot/initrd.img-ramboot  
 ```
-1.4. Check that the file is created in the /boot folder and return the old local to its place in the /usr/share/initramfs-tools/scripts/local folder (or delete all our changes that we made in step 1).
-1.5. Go to the folder: /etc and find the file: fstab, save a copy of it and edit it, look for something like this in the first lines:
+### 1.4. Check that the file is created in the /boot folder and return the old local to its place in the /usr/share/initramfs-tools/scripts/local folder (or delete all our changes that we made in step 1).  
 
-UUID= 321dba83-9a22-442b-b06b-185d7afe1088 / ext4 defaults 1 1
-
-and change to:
-
-none / tmpfs defaults 0 0
-
-1.6 Let's make a suitable menu at boot:
-
-file:
-
-nano /etc/grub.d/40_custom
-
-Content:
-
+### 1.5. Go to the folder: /etc and find the file: fstab, save a copy of it and edit it, look for something like this in the first lines:  
+```
+UUID= 321dba83-9a22-442b-b06b-185d7afe1088 / ext4 defaults 1 1  
+```
+**and change to:**  
+```
+none / tmpfs defaults 0 0  
+```
+### 1.6 Let's make a suitable menu at boot:  
+**file:**  
+```
+nano /etc/grub.d/40_custom  
+```
+**Content:**  
+```
 #!/bin/sh
 exec tail -n +3 $0
 # This file provides an easy way to add custom menu entries.  Simply type the
@@ -71,10 +71,11 @@ menuentry 'RAM-Debian GNU/Linux' --class debian --class gnu-linux --class gnu --
         linux   /boot/vmlinuz-6.1.0-28-amd64 root=UUID=321dba83-9a22-442b-b06b-185d7afe1088 ro  quiet splash toram
         echo    'Loading initial ramdisk ...'
         initrd  /boot/initrd.img-ramboot
-}
-
-update-grub
-
+}  
+```
+```
+update-grub  
+```
 We get the grub menu.
 1.6. Now let's create ram.tar.gz, turn off the virtual machine, boot a new virtual machine in liveCD mode and connect the disk of this virtual machine.
 
