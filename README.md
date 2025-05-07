@@ -76,14 +76,15 @@ menuentry 'RAM-Debian GNU/Linux' --class debian --class gnu-linux --class gnu --
 ```
 update-grub  
 ```
-We get the grub menu.
-1.6. Now let's create ram.tar.gz, turn off the virtual machine, boot a new virtual machine in liveCD mode and connect the disk of this virtual machine.
+**We get the grub menu.**  
 
-Mount it to /mnt. Let's do it:
+## 1.6. Now let's create ram.tar.gz, turn off the virtual machine, boot a new virtual machine in liveCD mode and connect the disk of this virtual machine.  
 
+**Mount it to /mnt. Let's do it:**  
+```
 # cd /mnt
-# tar -czf /mnt/boot/ram.tar.gz .
-
+# tar -czf /mnt/boot/ram.tar.gz .  
+```
 ## 1.7. Now when loading the virtual machine, select the appropriate RAM boot menu. After loading, unlock the disk:  
 
 ### 1.7.1. Arrêtons l'accès au disque:  
@@ -158,7 +159,7 @@ Bus  9, device   1, function 0:
       BAR1: 32 bit memory at 0xfd800000 [0xfd800fff].
       BAR4: 64 bit prefetchable memory at 0xfc000000 [0xfc003fff].
       id "virtioscsi0"  
-``
+```
 **Recall:**  
 ```
 qm> device_del virtioscsi0  
@@ -175,13 +176,13 @@ root@pve1:~# nano /etc/pve/qemu-server/105.conf
 ```
 disabled=1  
 ```
-Example:
-
+*Example:*  
+```
 scsi0: local-lvm:vm-105-disk-1,disabled=1,aio=native,backup=0,discard=on,iothread=1,size=8G
-scsihw: virtio-scsi-single,disabled=1
-
-1.7.4.3. And during migration we will see:
-
+scsihw: virtio-scsi-single,disabled=1  
+```
+#### 1.7.4.3. And during migration we will see:  
+```
 ()
 Task viewer: VM 105 - Migrate
 OutputStatus
@@ -210,4 +211,7 @@ task started by HA resource agent
 2025-01-04 00:34:38 average migration speed: 457.0 MiB/s - downtime 73 ms
 2025-01-04 00:34:38 migration status: completed
 2025-01-04 00:34:42 migration finished successfully (duration 00:00:18)
-TASK OK
+TASK OK  
+```
+
+#AppSec or #DevSecOps for developer visibility
