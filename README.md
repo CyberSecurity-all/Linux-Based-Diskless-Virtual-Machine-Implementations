@@ -84,45 +84,51 @@ Mount it to /mnt. Let's do it:
 # cd /mnt
 # tar -czf /mnt/boot/ram.tar.gz .
 
-1.7. Now when loading the virtual machine, select the appropriate RAM boot menu. After loading, unlock the disk:
-1.7.1. Arrêtons l'accès au disque:
+## 1.7. Now when loading the virtual machine, select the appropriate RAM boot menu. After loading, unlock the disk:  
 
-To do this, use the command:
+### 1.7.1. Arrêtons l'accès au disque:  
 
-echo 1 > /sys/block/sda/device/delete
+**To do this, use the command:**  
+```
+echo 1 > /sys/block/sda/device/delete  
+```
+```
+echo 1 > /sys/block/sda/device/delete  
+```
+**This will disable the /dev/sda device at kernel level. The player will no longer be visible in the system.**  
 
-echo 1 > /sys/block/sda/device/delete
+### 1.7.2 Let's check the status:  
 
-This will disable the /dev/sda device at kernel level. The player will no longer be visible in the system.
-1.7.2 Let's check the status:
-
-Let's make sure the drive is no longer showing up in the list of devices:
-
-lsblk
-
-It will look like this:
-
+**Let's make sure the drive is no longer showing up in the list of devices:**  
+```
+lsblk  
+```
+**It will look like this:**  
+```
 root@debvsan:/home/vov# lsblk
 NAME                            MAJ:MIN RM   SIZE RO TYPE  MOUNTPOINTS
 sda                               8:0    0     8G  0 disk  
 └─sda1                            8:1    0     8G  0 part  
-root@debvsan:/home/vov#
+root@debvsan:/home/vov#  
+```
+```
+echo 1 > /sys/block/sda/device/delete  
+```
+```
+lsblk  
+```
+### 1.7.3. Detaching a disk from a virtual machine via the QEMU monitor:  
 
-echo 1 > /sys/block/sda/device/delete
-
-lsblk
-
-1.7.3. Detaching a disk from a virtual machine via the QEMU monitor:
-1.7.3.1 Connect to the QEMU monitor for a specific virtual machine:
-
-qm monitor 105
-
-Check all devices connected to the virtual machine:
-
+#### 1.7.3.1 Connect to the QEMU monitor for a specific virtual machine:  
+```
+qm monitor 105  
+```
+**Check all devices connected to the virtual machine:**  
+```
 info block  
-
-All connected disks will be displayed. You will see something like this:
-
+```
+**All connected disks will be displayed. You will see something like this:**  
+```
 root@pve1:~# qm monitor 105 
 Entering QEMU Monitor for VM 105 - type 'help' for help
 qm> info block
@@ -130,20 +136,20 @@ drive-scsi0 (#block190): /dev/pve/vm-105-disk-1 (raw)
     Attached to:      scsi0
     Cache mode:       writeback, direct
     Detect zeroes:    unmap
-qm>
+qm>  
+```
+**Disassemble the player:**  
+```
+device_del scsi0  
+```
+**Check what devices are connected:**  
+```
+info pci  
+```
+**You will see a list of PCI devices, including the SCSI controller.**  
 
-Disassemble the player:
-
-device_del scsi0
-
-Check what devices are connected:
-
-info pci
-
-You will see a list of PCI devices, including the SCSI controller.
-
-For example:
-
+*For example:*  
+```
 Bus  9, device   1, function 0:
     SCSI controller: PCI device 1af4:1004
       PCI subsystem 1af4:0008
@@ -151,24 +157,24 @@ Bus  9, device   1, function 0:
       BAR0: I/O at 0x1000 [0x103f].
       BAR1: 32 bit memory at 0xfd800000 [0xfd800fff].
       BAR4: 64 bit prefetchable memory at 0xfc000000 [0xfc003fff].
-      id "virtioscsi0"
-
-Recall:
-
-qm> device_del virtioscsi0
-
-To exit:
-
-q
-
-1.7.4.2. Insert into the configuration file:
-
-root@pve1:~# nano /etc/pve/qemu-server/105.conf
-
-Next:
-
-disabled=1
-
+      id "virtioscsi0"  
+``
+**Recall:**  
+```
+qm> device_del virtioscsi0  
+```
+**To exit:**  
+```
+q  
+```
+#### 1.7.4.2. Insert into the configuration file:  
+```
+root@pve1:~# nano /etc/pve/qemu-server/105.conf  
+```
+**Next:**  
+```
+disabled=1  
+```
 Example:
 
 scsi0: local-lvm:vm-105-disk-1,disabled=1,aio=native,backup=0,discard=on,iothread=1,size=8G
